@@ -9,17 +9,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vkinfo.models.Login;
 import com.example.vkinfo.models.User;
-import com.example.vkinfo.utils.NetworkTask;
-import com.example.vkinfo.utils.TaskRunner;
-import com.example.vkinfo.utils.iOnDataFetched;
+import com.example.vkinfo.utils.SeancesAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -31,7 +33,6 @@ import static com.example.vkinfo.utils.RetrofitUserClient.getRetrofitUserClient;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static String token;
     public EditText usernameFiled;
     public EditText passwordFiled;
     public EditText searchField;
@@ -40,9 +41,10 @@ public class MainActivity extends AppCompatActivity {
     public TextView resultArea;
     public TextView errorMessage;
     public ProgressBar loadingIndicator;
+    RecyclerView seancesList;
+    SeancesAdapter seancesAdapter;
 
     User user = new User();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
         resultArea = findViewById(R.id.tv_result);
         errorMessage = findViewById(R.id.tv_error_message);
         loadingIndicator = findViewById(R.id.pb_loading_indicator);
+        seancesList = findViewById(R.id.rv_numbers);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        seancesList.setLayoutManager(layoutManager);
+        seancesList.setHasFixedSize(true);
+
+
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -68,36 +77,9 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener onClickSearchListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                get();
+                getSeances();
             }
         };
-
-//        View.OnClickListener onClickSearchListener = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                iOnDataFetched onClickSearchListener = new iOnDataFetched() {
-//
-//                    @Override
-//                    public void showProgressBar() {
-//                        loadingIndicator.setVisibility(View.VISIBLE);
-//                    }
-//
-//                    @Override
-//                    public void setDataInPageWithResult(Object result) {
-//                        resultArea.setText(result.toString());
-//                    }
-//
-//                    @Override
-//                    public void hideProgressBar() {
-//                        loadingIndicator.setVisibility(View.INVISIBLE);
-//                    }
-//                };
-//
-//                TaskRunner runner = new TaskRunner();
-//                runner.executeAsync(new NetworkTask(onClickSearchListener, user));
-//            }
-//        };
 
         loginButton.setOnClickListener(onClickListener);
         searchButton.setOnClickListener(onClickSearchListener);
@@ -126,26 +108,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void get() {
+    private void getSeances() {
         Call<ResponseBody> call = getRetrofitUserClient().getAllSeances(user.getToken());
 
         call.enqueue(new Callback<ResponseBody>() {
 
-
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                StringBuilder allSeancesList = new StringBuilder();
-
 
                 try {
                     JSONArray moviesArray = new JSONArray(response.body().string());
+                    List<String> seances = new ArrayList<>();
 
                     for (int i = 0; i < moviesArray.length(); i++) {
-                        allSeancesList.append(moviesArray.getJSONObject(i)
-                                .getJSONObject("movie").getString("title")).append("\n");
+                        StringBuilder seanceInfo = new StringBuilder();
+
+                        seanceInfo
+                                .append("Movie title: ")
+                                .append(moviesArray.getJSONObject(i).getJSONObject("movie").getString("title"))
+                                .append("\n")
+                                .append("Movie duration: ")
+                                .append(moviesArray.getJSONObject(i).getJSONObject("movie").getString("duration"))
+                                .append("\n")
+                                .append("Seance start time: ")
+                                .append(moviesArray.getJSONObject(i).getString("startTime"))
+                                .append("\n")
+                                .append("Seance end time: ")
+                                .append(moviesArray.getJSONObject(i).getString("endTime"))
+                                .append("\n")
+                                .append("Day: ")
+                                .append(moviesArray.getJSONObject(i).getString("day"))
+                                .append("\n");
+
+                        seances.add(seanceInfo.toString());
                     }
 
-                    Toast.makeText(MainActivity.this, allSeancesList.toString(), Toast.LENGTH_SHORT).show();
+                    seancesAdapter = new SeancesAdapter(seances, MainActivity.this);
+                    seancesList.setAdapter(seancesAdapter);
 
                 } catch (JSONException | IOException e) {
                     e.printStackTrace();

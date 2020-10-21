@@ -89,6 +89,11 @@
             android:text="@string/error_message"
             android:textSize="22sp"
             android:visibility="invisible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_numbers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </FrameLayout>
 
     <ProgressBar
@@ -97,4 +102,6 @@
         android:layout_height="45dp"
         android:layout_gravity="center"
         android:visibility="invisible" />
+
+
 </LinearLayout>
