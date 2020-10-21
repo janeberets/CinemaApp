@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CinemaApp</string>
+    <string name="search_field">Search field</string>
+    <string name="result">Search results</string>
+    <string name="button_text">Search</string>
+    <string name="login">Login</string>
+    <string name="username">User name</string>
+    <string name="password">Password</string>
+
+    <string name="error_message">Something went wrong :(</string>
+</resources>
