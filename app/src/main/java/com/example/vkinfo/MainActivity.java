@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         seancesList.setHasFixedSize(true);
 
 
-
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +76,11 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener onClickSearchListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSeances();
+                if (user.getToken() != null) {
+                    getSeances();
+                } else {
+                    Toast.makeText(MainActivity.this, "You are not logged in", Toast.LENGTH_SHORT).show();
+                }
             }
         };
 
@@ -153,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Something went wrong :(", Toast.LENGTH_SHORT).show();
             }
         });
     }

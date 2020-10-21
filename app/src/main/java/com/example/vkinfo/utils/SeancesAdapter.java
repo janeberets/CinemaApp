@@ -1,16 +1,17 @@
 package com.example.vkinfo.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vkinfo.R;
+import com.example.vkinfo.activities.SeancesActivity;
 
 import java.util.List;
 
@@ -64,9 +65,11 @@ public class SeancesAdapter extends RecyclerView.Adapter<SeancesAdapter.SeanceVi
                 @Override
                 public void onClick(View v) {
                     int positionIndex = getAdapterPosition();
-                    Toast toast = Toast.makeText(parent, "Item " + positionIndex
-                            + " was clicked", Toast.LENGTH_SHORT);
-                    toast.show();
+
+                    Context context = parent;
+                    Intent seanceActivityIntent = new Intent(context, SeancesActivity.class);
+                    seanceActivityIntent.putExtra(Intent.EXTRA_TEXT, seances.get(positionIndex));
+                    context.startActivity(seanceActivityIntent);
                 }
             });
         }
