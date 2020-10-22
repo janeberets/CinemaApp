@@ -7,6 +7,7 @@ import com.example.vkinfo.models.User;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PATCH;
@@ -26,4 +27,7 @@ public interface UserClient {
 
     @PATCH("/api-seance/update/{id}")
     Call<ResponseBody> updateSeance(@Header("Authorization") String authToken, @Path("id") String id, @Body Seance seance);
+
+    @DELETE("/api-seance/remove/{id}")
+    Call<ResponseBody> deleteSeance(@Header("Authorization") String authToken, @Path("id") String id);
 }

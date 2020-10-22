@@ -15,4 +15,5 @@
     <string name="add_seance">Add Seance</string>
     <string name="seance_id">Seance Id</string>
     <string name="update_seance">Update Seance</string>
+    <string name="delete_seance">Delete</string>
 </resources>

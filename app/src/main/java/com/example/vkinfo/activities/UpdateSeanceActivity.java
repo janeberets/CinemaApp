@@ -27,6 +27,7 @@ public class UpdateSeanceActivity extends AppCompatActivity {
     private TextView startTime;
     private TextView day;
     private Button updateSeance;
+    private Button deleteSeance;
     private User user;
     private Seance seance;
 
@@ -39,6 +40,7 @@ public class UpdateSeanceActivity extends AppCompatActivity {
         startTime = findViewById(R.id.et_seance_start_time);
         day = findViewById(R.id.et_seance_day);
         updateSeance = findViewById(R.id.update_seance_btn);
+        deleteSeance = findViewById(R.id.delete_seance_btn);
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -52,7 +54,7 @@ public class UpdateSeanceActivity extends AppCompatActivity {
                     .getStringExtra("seance"), Seance.class);
         }
 
-        View.OnClickListener onClickCreateSeanceListener = new View.OnClickListener() {
+        View.OnClickListener onClickUpdateSeanceListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (user.getToken() != null) {
@@ -63,7 +65,19 @@ public class UpdateSeanceActivity extends AppCompatActivity {
             }
         };
 
-        updateSeance.setOnClickListener(onClickCreateSeanceListener);
+        View.OnClickListener onClickDeleteSeanceListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (user.getToken() != null) {
+                    deleteSeance();
+                } else {
+                    Toast.makeText(UpdateSeanceActivity.this, "You are not logged in", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
+        updateSeance.setOnClickListener(onClickUpdateSeanceListener);
+        deleteSeance.setOnClickListener(onClickDeleteSeanceListener);
     }
 
     private void updateSeance() {
@@ -81,6 +95,29 @@ public class UpdateSeanceActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(UpdateSeanceActivity.this, "Seance was updated", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(UpdateSeanceActivity.this, "Bad response :(", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(UpdateSeanceActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void deleteSeance() {
+
+        Call<ResponseBody> call = getRetrofitUserClient()
+                .deleteSeance(user.getToken(), String.valueOf(seance.getId()));
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(UpdateSeanceActivity.this, "Seance was deleted", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(UpdateSeanceActivity.this, "Bad response :(", Toast.LENGTH_SHORT).show();
                 }
