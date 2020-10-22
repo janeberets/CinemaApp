@@ -11,20 +11,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vkinfo.R;
-import com.example.vkinfo.activities.SeancesActivity;
+import com.example.vkinfo.activities.UpdateSeanceActivity;
+import com.example.vkinfo.models.Seance;
+import com.example.vkinfo.models.User;
+import com.google.gson.Gson;
 
 import java.util.List;
 
 public class SeancesAdapter extends RecyclerView.Adapter<SeancesAdapter.SeanceViewHolder> {
 
     private int seanceItems;
-    private List<String> seances;
+    private List<Seance> seances;
     private Context parent;
+    private User user;
 
-    public SeancesAdapter(List<String> seances, Context parent) {
+    public SeancesAdapter(List<Seance> seances, User user, Context parent) {
         this.seances = seances;
         this.seanceItems = seances.size();
         this.parent = parent;
+        this.user = user;
     }
 
     @NonNull
@@ -67,15 +72,16 @@ public class SeancesAdapter extends RecyclerView.Adapter<SeancesAdapter.SeanceVi
                     int positionIndex = getAdapterPosition();
 
                     Context context = parent;
-                    Intent seanceActivityIntent = new Intent(context, SeancesActivity.class);
-                    seanceActivityIntent.putExtra(Intent.EXTRA_TEXT, seances.get(positionIndex));
+                    Intent seanceActivityIntent = new Intent(context, UpdateSeanceActivity.class);
+                    seanceActivityIntent.putExtra("seance", new Gson().toJson(seances.get(positionIndex)));
+                    seanceActivityIntent.putExtra("user", new Gson().toJson(user));
                     context.startActivity(seanceActivityIntent);
                 }
             });
         }
 
         void bind(int listIndex) {
-            listItemNumberView.setText(seances.get(listIndex));
+            listItemNumberView.setText(seances.get(listIndex).toString());
         }
     }
 }

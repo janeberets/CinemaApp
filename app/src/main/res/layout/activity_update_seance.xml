@@ -7,7 +7,7 @@
     android:paddingStart="@dimen/horizontal_padding"
     android:paddingTop="16dp"
     android:paddingEnd="@dimen/horizontal_padding"
-    tools:context=".activities.CreateSeanceActivity">
+    tools:context=".activities.UpdateSeanceActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -43,9 +43,9 @@
             android:textSize="25sp" />
 
         <Button
-            android:id="@+id/create_seance_btn"
+            android:id="@+id/update_seance_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/create_seance" />
+            android:text="@string/update_seance" />
     </LinearLayout>
 </LinearLayout>

@@ -9,7 +9,9 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface UserClient {
 
@@ -21,4 +23,7 @@ public interface UserClient {
 
     @POST("/api-seance/add")
     Call<ResponseBody> addSeance(@Header("Authorization") String authToken, @Body Seance seance);
+
+    @PATCH("/api-seance/update/{id}")
+    Call<ResponseBody> updateSeance(@Header("Authorization") String authToken, @Path("id") String id, @Body Seance seance);
 }

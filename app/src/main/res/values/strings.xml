@@ -13,4 +13,6 @@
     <string name="start_day">Start Time</string>
     <string name="movie_id">Movie Id</string>
     <string name="add_seance">Add Seance</string>
+    <string name="seance_id">Seance Id</string>
+    <string name="update_seance">Update Seance</string>
 </resources>

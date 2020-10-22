@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vkinfo.activities.CreateSeanceActivity;
-import com.example.vkinfo.activities.SeancesActivity;
 import com.example.vkinfo.models.Login;
 import com.example.vkinfo.models.Seance;
 import com.example.vkinfo.models.User;
@@ -85,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
+        View.OnClickListener onClickLoginListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 login();
@@ -103,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        loginButton.setOnClickListener(onClickListener);
+        loginButton.setOnClickListener(onClickLoginListener);
         searchButton.setOnClickListener(onClickSearchListener);
         addSeanceButton.setOnClickListener(onClickAddSeanceListener);
     }
@@ -140,32 +139,20 @@ public class MainActivity extends AppCompatActivity {
 
                 try {
                     JSONArray moviesArray = new JSONArray(response.body().string());
-                    List<String> seances = new ArrayList<>();
+                    List<Seance> seances = new ArrayList<>();
 
                     for (int i = 0; i < moviesArray.length(); i++) {
-                        StringBuilder seanceInfo = new StringBuilder();
 
-                        seanceInfo
-                                .append("Movie title: ")
-                                .append(moviesArray.getJSONObject(i).getJSONObject("movie").getString("title"))
-                                .append("\n")
-                                .append("Movie duration: ")
-                                .append(moviesArray.getJSONObject(i).getJSONObject("movie").getString("duration"))
-                                .append("\n")
-                                .append("Seance start time: ")
-                                .append(moviesArray.getJSONObject(i).getString("startTime"))
-                                .append("\n")
-                                .append("Seance end time: ")
-                                .append(moviesArray.getJSONObject(i).getString("endTime"))
-                                .append("\n")
-                                .append("Day: ")
-                                .append(moviesArray.getJSONObject(i).getString("day"))
-                                .append("\n");
-
-                        seances.add(seanceInfo.toString());
+                        Seance seance = new Seance(
+                                Integer.parseInt(moviesArray.getJSONObject(i).getString("id")),
+                                Integer.parseInt(moviesArray.getJSONObject(i).getJSONObject("movie").getString("id")),
+                                moviesArray.getJSONObject(i).getString("startTime"),
+                                moviesArray.getJSONObject(i).getString("day")
+                                );
+                        seances.add(seance);
                     }
 
-                    seancesAdapter = new SeancesAdapter(seances, MainActivity.this);
+                    seancesAdapter = new SeancesAdapter(seances, user, MainActivity.this);
                     seancesList.setAdapter(seancesAdapter);
 
                 } catch (JSONException | IOException e) {
