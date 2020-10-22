@@ -8,4 +8,9 @@
     <string name="password">Password</string>
 
     <string name="error_message">Something went wrong :(</string>
+    <string name="create_seance">Create Seance</string>
+    <string name="day">Day</string>
+    <string name="start_day">Start Time</string>
+    <string name="movie_id">Movie Id</string>
+    <string name="add_seance">Add Seance</string>
 </resources>

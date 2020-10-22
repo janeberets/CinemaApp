@@ -1,5 +1,6 @@
 package com.example.vkinfo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,9 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.vkinfo.activities.CreateSeanceActivity;
+import com.example.vkinfo.activities.SeancesActivity;
 import com.example.vkinfo.models.Login;
+import com.example.vkinfo.models.Seance;
 import com.example.vkinfo.models.User;
 import com.example.vkinfo.utils.SeancesAdapter;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public EditText searchField;
     public Button searchButton;
     public Button loginButton;
+    public Button addSeanceButton;
     public TextView resultArea;
     public TextView errorMessage;
     public ProgressBar loadingIndicator;
@@ -60,11 +66,24 @@ public class MainActivity extends AppCompatActivity {
         errorMessage = findViewById(R.id.tv_error_message);
         loadingIndicator = findViewById(R.id.pb_loading_indicator);
         seancesList = findViewById(R.id.rv_numbers);
+        addSeanceButton = findViewById(R.id.add_seance);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         seancesList.setLayoutManager(layoutManager);
         seancesList.setHasFixedSize(true);
 
+        View.OnClickListener onClickAddSeanceListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (user.getToken() != null) {
+                    Intent createSeanceActivityIntent = new Intent(MainActivity.this, CreateSeanceActivity.class);
+                    createSeanceActivityIntent.putExtra(Intent.EXTRA_TEXT, new Gson().toJson(user));
+                    startActivity(createSeanceActivityIntent);
+                } else {
+                    Toast.makeText(MainActivity.this, "You are not logged in", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -86,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         loginButton.setOnClickListener(onClickListener);
         searchButton.setOnClickListener(onClickSearchListener);
+        addSeanceButton.setOnClickListener(onClickAddSeanceListener);
     }
 
 
@@ -109,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void getSeances() {
         Call<ResponseBody> call = getRetrofitUserClient().getAllSeances(user.getToken());

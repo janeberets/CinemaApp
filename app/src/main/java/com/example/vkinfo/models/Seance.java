@@ -1,14 +1,16 @@
 package com.example.vkinfo.models;
 
-import java.time.LocalTime;
-
 public class Seance {
 
     private long id;
-    private Movie movie;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private int movieId;
+    private String startTime;
     private String day;
 
+    public Seance(int movieId, String startTime, String day) {
+        this.movieId = movieId;
+        this.startTime = startTime;
+        this.day = day;
+    }
 }
 
